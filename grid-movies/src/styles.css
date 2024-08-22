@@ -1,0 +1,29 @@
+@import "./core.css";
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+  overflow-x: hidden;
+  height: 120vh;
+  padding: 0;
+}
+
+body {
+  height: 100%;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+#root, .App {
+  height: inherit;
+}
+
