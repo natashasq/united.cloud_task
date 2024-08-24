@@ -7,14 +7,10 @@
 
 html {
   box-sizing: border-box;
-  font-size: 16px;
-  overflow-x: hidden;
-  height: 120vh;
   padding: 0;
 }
 
 body {
-  height: 100%;
   padding: 0;
   font-family: "Lato", sans-serif;
 }
@@ -23,7 +19,4 @@ div {
   box-sizing: border-box;
 }
 
-#root, .App {
-  height: inherit;
-}
 

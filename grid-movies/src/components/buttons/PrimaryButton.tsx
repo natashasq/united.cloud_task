@@ -9,7 +9,7 @@ interface IPrimaryButtonProps {
 
 const PrimaryButton = ({ favorite, onClick }: IPrimaryButtonProps) => {
     return (
-        <div className='flex justify-between items-center p-4 rounded-xl bg-gray-700/35 cursor-pointer hover:bg-gray-700'>
+        <div className='flex absolute left-2 bottom-2 justify-between items-center p-4 rounded-xl bg-gray-500/50 cursor-pointer hover:bg-gray-300/50 z-50'>
             {favorite ? <img src={favoritesFull} alt="favorites icon" /> : <img src={favorites} alt="favorites icon" />}
         </div>
 

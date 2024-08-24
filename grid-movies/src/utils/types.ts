@@ -19,7 +19,8 @@ interface IMovieReponseItem {
     {
         id: string,
         rating: number
-    }[]
+    }[],
+    release_date: string
 }
 
 interface IMovieItem {
@@ -28,5 +29,6 @@ interface IMovieItem {
     originalTitle: string,
     overview: string,
     poster: BASE_URL.url,
-    rating: number
+    rating: number,
+    releaseDate: string
 }
