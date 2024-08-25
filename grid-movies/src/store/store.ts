@@ -57,7 +57,7 @@ export const moviesStore = create<TMoviesStore>((set, get) => ({
       const res = await getMovies(12, page);
 
       set({
-        paginationLoading: true,
+        paginationLoading: false,
         success: true,
         data: [...prevData, ...transformMovieApiData(res)],
         currentPage: page,

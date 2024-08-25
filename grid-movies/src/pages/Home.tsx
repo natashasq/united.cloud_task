@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Card from "../components/card/Card";
 import Container from "../components/layout/Container";
 import GridWrapper from "../components/layout/GridWrapper";
@@ -11,8 +11,40 @@ const Home = () => {
     error,
     data,
     paginationLoading,
+    fetchMoviesNextPage,
+    currentPage,
   } = moviesStore();
-  const bottomRef = useRef(null);
+  const bottomRef = useRef<HTMLSpanElement | null>(null);
+  const [isRefVisible, setIsRefVisible] = useState<boolean>(false);
+  // const bottomRef = useCallback(node: any => {
+  //   if (node !== null) {
+  //       console.log("ref", node); // node = elRef.current
+  //   }
+  // }, []);
+  console.log(isRefVisible);
+  useEffect(() => {
+    if (!isRefVisible) {
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !paginationLoading) {
+        fetchMoviesNextPage(currentPage + 1);
+      }
+    });
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+
+    return () => {
+      if (bottomRef.current) {
+        observer.unobserve(bottomRef.current);
+      }
+    };
+  }, [bottomRef, currentPage, fetchMoviesNextPage, isRefVisible]);
+
+  console.log(bottomRef);
   if (loading) {
     return (
       <Container>
@@ -36,9 +68,14 @@ const Home = () => {
         ))}
       </GridWrapper>
       {paginationLoading && <div>Loading</div>}
-      <div ref={bottomRef} className="h-8">
-        bottom ref
-      </div>
+      <span
+        ref={(el) => {
+          if (bottomRef) {
+            bottomRef.current = el;
+          }
+          setIsRefVisible?.(!!el);
+        }}
+      />
     </Container>
   );
 };
