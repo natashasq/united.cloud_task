@@ -1,4 +1,4 @@
-const filterData: (apiData: IMovieReponse) => IMovieReponseItem[] = (apiData) => {
+const filterMovies: (apiData: IMovieReponse) => IMovieReponseItem[] = (apiData) => {
     const filteredIds: number[] = [];
     const filteredData: IMovieReponseItem[] = [];
 
@@ -14,7 +14,7 @@ const filterData: (apiData: IMovieReponse) => IMovieReponseItem[] = (apiData) =>
     return filteredData;
 }
 
-export const mapMovieData: (apiData: IMovieReponse) => any[] = (apiData) => {
+export const mapMovies: (apiData: IMovieReponse) => any[] = (apiData) => {
     const baseUrl = "https://image.tmdb.org/t/p/w500";
 
     return apiData.map((item: Partial<IMovieReponseItem>) => {
@@ -25,13 +25,21 @@ export const mapMovieData: (apiData: IMovieReponse) => any[] = (apiData) => {
             overview: item.overview,
             poster: `${baseUrl}${item.poster_path}`,
             rating: item?.ratings?.filter((ratingItem: { id: string, rating: number }) => ratingItem.id === "imdb")[0].rating,
-            releaseDate: item.release_date
+            releaseDate: item.release_date,
+            isFavorite: false,
+            isSelected: false
         }
     });
 }
 
-export const transformMovieApiData: (apiData: IMovieReponse) => any = (apiData) => {
-    const filteredData = filterData(apiData);
-    const data = mapMovieData(filteredData);
-    return data;
+export const sortMovies: (apiData: IMovieItem[]) => any[] = (apiData) => {
+    return apiData.sort((item1, item2) => item2.rating - item1.rating); 
+}
+ 
+ export const transformMovieApiData: (apiData: IMovieReponse) => any = (apiData) => {
+    const filtereMovies = filterMovies(apiData);
+    const mappedMovies = mapMovies(filtereMovies);
+    const sortedMovies = sortMovies(mappedMovies)
+
+    return sortedMovies;
 }

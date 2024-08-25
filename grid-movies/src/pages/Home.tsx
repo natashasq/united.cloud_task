@@ -1,29 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { getMovies } from '../api';
-import { transformMovieApiData } from '../utils/transformMovieApiData';
-import Card from '../components/card/Card';
-import GridWrapper from '../components/layout/GridWrapper';
+import React, { useEffect, useRef } from "react";
+import Card from "../components/card/Card";
+import Container from "../components/layout/Container";
+import GridWrapper from "../components/layout/GridWrapper";
+import Loader from "../components/loader/Loader";
+import { moviesStore } from "../store/store";
 
 const Home = () => {
-    const [movieData, setMovieData] = useState<IMovieItem[]>([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await getMovies(10, 1);
-            const data = transformMovieApiData(res);
-            setMovieData(data)
-        }
-        fetchData().catch(console.error);
-    }, [])
-
+  const {
+    loading,
+    error,
+    data,
+    paginationLoading,
+  } = moviesStore();
+  const bottomRef = useRef(null);
+  if (loading) {
     return (
-        <div className='px-10 flex justify-center items-center md:ml-48'>
-            <GridWrapper>
-                {movieData.length && movieData.map(({ id, overview, originalTitle, ...item }) => <Card key={id} {...item} />)}
-            </GridWrapper>
-        </div>
-
+      <Container>
+        <Loader />
+      </Container>
     );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <p>Something went wrong...</p>
+      </Container>
+    );
+  }
+  return (
+    <Container>
+      <GridWrapper>
+        {data?.map(({ overview, originalTitle, ...item }) => (
+          <Card key={item.id} {...item} />
+        ))}
+      </GridWrapper>
+      {paginationLoading && <div>Loading</div>}
+      <div ref={bottomRef} className="h-8">
+        bottom ref
+      </div>
+    </Container>
+  );
 };
 
 export default Home;

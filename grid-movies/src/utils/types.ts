@@ -31,4 +31,6 @@ interface IMovieItem {
     poster: BASE_URL.url,
     rating: number,
     releaseDate: string
+    isFavorite: boolean,
+    isSelected: boolean
 }
