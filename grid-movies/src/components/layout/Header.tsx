@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 //ASSETS
 import logo from "../../assets/icons/logo.svg";
-import sort from "../../assets/icons/sort.svg";
+// import sort from "../../assets/icons/sort.svg";
 
 const Header = () => {
     return (

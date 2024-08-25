@@ -10,7 +10,7 @@ const SideBar = () => {
     const location = useLocation();
 
     return (
-        <div className="h-fit flex w-full px-8 z-10 absolute left-0 gap-7 md:flex-col md:h-full md:w-48 md:gap-2">
+        <div className="h-fit flex w-full px-8 z-10 absolute left-0 gap-7 md:flex-col md:w-48 md:gap-2">
             <Link to={"/home"}>
                 {location.pathname === "/home" ?
                     <div className="w-full h-8 flex justify-between items-center color-gray py-4 border-b-2 border-b-yellow md:border-r-2 md:border-r-yellow md:border-b-0"
