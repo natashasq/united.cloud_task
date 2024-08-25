@@ -1,3 +1,5 @@
+import { IMovieItem, IMovieReponse, IMovieReponseItem } from "../types/types";
+
 const filterMovies: (apiData: IMovieReponse) => IMovieReponseItem[] = (apiData) => {
     const filteredIds: number[] = [];
     const filteredData: IMovieReponseItem[] = [];

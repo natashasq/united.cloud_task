@@ -1,10 +1,14 @@
-enum BASE_URL {
+export enum BASE_URL {
     url = "https://image.tmdb.org/t/p/w500"
 }
 
-type IMovieReponse = IMovieReponseItem[];
+export enum BASE_DB_URL {
+    url = "http://localhost:5001/"
+}
 
-interface IMovieReponseItem {
+export type IMovieReponse = IMovieReponseItem[];
+
+export interface IMovieReponseItem {
     adult: boolean,
     backdrop_path: string | null,
     genre_ids: number[],
@@ -23,7 +27,7 @@ interface IMovieReponseItem {
     release_date: string
 }
 
-interface IMovieItem {
+export interface IMovieItem {
     id: number
     title: string,
     originalTitle: string,

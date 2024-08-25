@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { moviesStore } from "../../store/store";
 import { formatDate } from "../../utils";
 import PrimaryButton from "../buttons/PrimaryButton";
+import { IMovieItem } from "../../types/types";
 
 type TCardProps = Omit<IMovieItem, "overview" | "originalTitle">
 

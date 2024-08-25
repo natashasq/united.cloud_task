@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { getMovies } from "../api";
-import { transformMovieApiData } from "../utils";
+import { getTransformedMovies } from "../api";
+import { IMovieItem } from "../types/types";
 
 type TMoviesStore = {
   loading: boolean;
@@ -30,18 +30,18 @@ const initialState: TMoviesStore = {
   currentPage: 1,
 };
 
-export const moviesStore = create<TMoviesStore>((set, get) => ({
+export const moviesStore = create<TMoviesStore>((set: any, get: any) => ({
   ...initialState,
 
   fetchMovies: async () => {
     set({ loading: true });
     try {
-      const res = await getMovies(12, get().currentPage);
+      const res = await getTransformedMovies(get().currentPage);
 
       set({
         loading: false,
         success: true,
-        data: transformMovieApiData(res),
+        data: res,
       });
     } catch (err) {
       console.error("Error in data fetch:", err);
@@ -54,12 +54,12 @@ export const moviesStore = create<TMoviesStore>((set, get) => ({
 
     try {
       const prevData = get().data || [];
-      const res = await getMovies(12, page);
+      const res = await getTransformedMovies(page);
 
       set({
         paginationLoading: false,
         success: true,
-        data: [...prevData, ...transformMovieApiData(res)],
+        data: [...prevData, ...res],
         currentPage: page,
       });
     } catch (err) {
@@ -73,7 +73,7 @@ export const moviesStore = create<TMoviesStore>((set, get) => ({
     set({
       paginationLoading: true,
       success: true,
-      data: prevData.map((item) =>
+      data: prevData.map((item: IMovieItem) =>
         item.id === id
           ? { ...item, isSelected: !item.isSelected }
           : { ...item, isSelected: false }
@@ -86,7 +86,7 @@ export const moviesStore = create<TMoviesStore>((set, get) => ({
     set({
       paginationLoading: true,
       success: true,
-      data: prevData.map((item) =>
+      data: prevData.map((item: IMovieItem) =>
         item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
       ),
     });
@@ -94,5 +94,5 @@ export const moviesStore = create<TMoviesStore>((set, get) => ({
 }));
 
 export const selectFavoriteMovies = () =>
-  moviesStore(({ data }) => data?.filter((item) => item.isFavorite));
+  moviesStore(({ data }) => data?.filter((item: IMovieItem) => item.isFavorite));
 moviesStore.getState().fetchMovies();

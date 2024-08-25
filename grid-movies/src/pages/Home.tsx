@@ -16,12 +16,6 @@ const Home = () => {
   } = moviesStore();
   const bottomRef = useRef<HTMLSpanElement | null>(null);
   const [isRefVisible, setIsRefVisible] = useState<boolean>(false);
-  // const bottomRef = useCallback(node: any => {
-  //   if (node !== null) {
-  //       console.log("ref", node); // node = elRef.current
-  //   }
-  // }, []);
-  console.log(isRefVisible);
   useEffect(() => {
     if (!isRefVisible) {
       return;
@@ -44,7 +38,6 @@ const Home = () => {
     };
   }, [bottomRef, currentPage, fetchMoviesNextPage, isRefVisible]);
 
-  console.log(bottomRef);
   if (loading) {
     return (
       <Container>
