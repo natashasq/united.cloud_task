@@ -1,20 +1,28 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Card from "../components/card/Card";
 import Container from "../components/layout/Container";
 import GridWrapper from "../components/layout/GridWrapper";
-import { selectFavoriteMovies } from "../store/store";
+import useKeyboardNavigation from "../hooks/useKeyboardNavigation";
+import {
+  selectFavoriteMovies,
+  selectSelectedMovie,
+} from "../store/movies-store";
 
-const Faovites = () => {
+const Favorites = () => {
   const favoriteMovies = selectFavoriteMovies();
+  const selectedMovie = selectSelectedMovie();
+
+  useKeyboardNavigation(favoriteMovies?.length ?? 0, selectedMovie?.id ?? 0);
+
   return (
     <Container>
       <GridWrapper>
-        {favoriteMovies?.map(({ overview, originalTitle, ...item }) => (
-          <Card key={item.id} {...item} />
+        {favoriteMovies?.map(({ overview, originalTitle, ...item }, index) => (
+          <Card key={item.id} index={index} {...item} />
         ))}
       </GridWrapper>
     </Container>
   );
 };
 
-export default Faovites;
+export default Favorites;

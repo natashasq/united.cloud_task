@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React from "react";
 import Card from "../components/card/Card";
+import InfiniteScroll from "../components/infinite-scroll/InfiniteScroll";
 import Container from "../components/layout/Container";
 import GridWrapper from "../components/layout/GridWrapper";
 import Loader from "../components/loader/Loader";
-import { moviesStore } from "../store/store";
+import useKeyboardNavigation from "../hooks/useKeyboardNavigation";
+import { moviesStore, selectSelectedMovie } from "../store/movies-store";
 
 const Home = () => {
   const {
@@ -11,32 +13,13 @@ const Home = () => {
     error,
     data,
     paginationLoading,
-    fetchMoviesNextPage,
+    totalCount,
     currentPage,
+    fetchMoviesNextPage,
   } = moviesStore();
-  const bottomRef = useRef<HTMLSpanElement | null>(null);
-  const [isRefVisible, setIsRefVisible] = useState<boolean>(false);
-  useEffect(() => {
-    if (!isRefVisible) {
-      return;
-    }
+  const selectedMovie = selectSelectedMovie();
 
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !paginationLoading) {
-        fetchMoviesNextPage(currentPage + 1);
-      }
-    });
-
-    if (bottomRef.current) {
-      observer.observe(bottomRef.current);
-    }
-
-    return () => {
-      if (bottomRef.current) {
-        observer.unobserve(bottomRef.current);
-      }
-    };
-  }, [bottomRef, currentPage, fetchMoviesNextPage, isRefVisible]);
+  useKeyboardNavigation(data?.length ?? 0, selectedMovie?.id ?? 0);
 
   if (loading) {
     return (
@@ -53,22 +36,32 @@ const Home = () => {
       </Container>
     );
   }
+
+  if (data?.length) {
+    const shouldFetchMoviesNextPage = !!(
+      !paginationLoading && totalCount > data?.length
+    );
+
+    return (
+      <Container>
+        <InfiniteScroll
+          shouldFetchNextPage={shouldFetchMoviesNextPage}
+          fetchNextPageCallback={() => fetchMoviesNextPage(currentPage + 1)}
+          isLoading={paginationLoading}
+        >
+          <GridWrapper>
+            {data?.map(({ overview, originalTitle, ...item }, index) => (
+              <Card key={item.id} index={index} {...item} />
+            ))}
+          </GridWrapper>
+        </InfiniteScroll>
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      <GridWrapper>
-        {data?.map(({ overview, originalTitle, ...item }) => (
-          <Card key={item.id} {...item} />
-        ))}
-      </GridWrapper>
-      {paginationLoading && <div>Loading</div>}
-      <span
-        ref={(el) => {
-          if (bottomRef) {
-            bottomRef.current = el;
-          }
-          setIsRefVisible?.(!!el);
-        }}
-      />
+      <Loader />
     </Container>
   );
 };

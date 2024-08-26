@@ -9,11 +9,12 @@ type TMoviesStore = {
   error: boolean;
   data: IMovieItem[] | null;
   errorData: any;
+  currentPage: number;
+  totalCount: number;
   selectMovie: (id: number) => void;
-  markMovieAsFavorite: (id: number) => void;
+  setFavoriteMovie: (id: number) => void;
   fetchMovies: () => void;
   fetchMoviesNextPage: (page: number) => void;
-  currentPage: number;
 };
 
 const initialState: TMoviesStore = {
@@ -23,28 +24,32 @@ const initialState: TMoviesStore = {
   error: false,
   data: null,
   errorData: null,
+  currentPage: 1,
+  totalCount: 0,
   selectMovie: () => {},
-  markMovieAsFavorite: () => {},
+  setFavoriteMovie: () => {},
   fetchMovies: () => {},
   fetchMoviesNextPage: () => {},
-  currentPage: 1,
 };
 
-export const moviesStore = create<TMoviesStore>((set: any, get: any) => ({
+export const moviesStore = create<TMoviesStore>((set, get) => ({
   ...initialState,
 
   fetchMovies: async () => {
     set({ loading: true });
+
     try {
-      const res = await getTransformedMovies(get().currentPage);
+      const { data, totalCount } = await getTransformedMovies(
+        get().currentPage
+      );
 
       set({
         loading: false,
         success: true,
-        data: res,
+        data,
+        totalCount: parseInt(totalCount),
       });
     } catch (err) {
-      console.error("Error in data fetch:", err);
       set({ error: true, loading: false, errorData: err });
     }
   },
@@ -53,46 +58,44 @@ export const moviesStore = create<TMoviesStore>((set: any, get: any) => ({
     set({ paginationLoading: true });
 
     try {
-      const prevData = get().data || [];
-      const res = await getTransformedMovies(page);
+      const { data: nextData } = await getTransformedMovies(page);
 
-      set({
+      set(({ data: prevData }) => ({
         paginationLoading: false,
         success: true,
-        data: [...prevData, ...res],
+        data: prevData ? [...prevData, ...nextData] : nextData,
         currentPage: page,
-      });
+      }));
     } catch (err) {
-      console.error("Error in data fetch:", err);
       set({ error: true, paginationLoading: true, errorData: err });
     }
   },
 
   selectMovie: (id: number) => {
-    const prevData = get().data || [];
-    set({
-      paginationLoading: true,
-      success: true,
-      data: prevData.map((item: IMovieItem) =>
-        item.id === id
-          ? { ...item, isSelected: !item.isSelected }
-          : { ...item, isSelected: false }
-      ),
-    });
+    set(({ data }) => ({
+      data: data?.map(({ isSelected, ...item }: IMovieItem) => ({
+        ...item,
+        isSelected: item.id === id,
+      })),
+    }));
   },
 
-  markMovieAsFavorite: (id: number) => {
-    const prevData = get().data || [];
-    set({
-      paginationLoading: true,
-      success: true,
-      data: prevData.map((item: IMovieItem) =>
-        item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-      ),
-    });
+  setFavoriteMovie: (id: number) => {
+    set(({ data }) => ({
+      data: data?.map(({ isFavorite, ...item }: IMovieItem) => ({
+        ...item,
+        isFavorite: item.id === id ? !isFavorite : isFavorite,
+      })),
+    }));
   },
 }));
 
 export const selectFavoriteMovies = () =>
-  moviesStore(({ data }) => data?.filter((item: IMovieItem) => item.isFavorite));
+  moviesStore(({ data }) =>
+    data?.filter((item: IMovieItem) => item.isFavorite)
+  );
+
+export const selectSelectedMovie = () =>
+  moviesStore(({ data }) => data?.find((item: IMovieItem) => item.isSelected));
+
 moviesStore.getState().fetchMovies();

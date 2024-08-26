@@ -12,9 +12,12 @@ export const getAllMovies: () => any = async () => {
 
 export const postFilteredMovies: (data: IMovieItem[]) => any = async (data) => {
   try {
-    const transformedMoviesData = await getTransformedMovies(1);
-    if (!transformedMoviesData.length) {
-      const res = await axios.post("http://localhost:5001/filteredMovies", data);
+    const { data } = await getTransformedMovies(1);
+    if (!data.length) {
+      const res = await axios.post(
+        "http://localhost:5001/filteredMovies",
+        data
+      );
       return res.data;
     }
   } catch (err) {
@@ -24,8 +27,10 @@ export const postFilteredMovies: (data: IMovieItem[]) => any = async (data) => {
 
 export const getTransformedMovies: (page: number) => any = async (page) => {
   try {
-    const res = await axios.get(`http://localhost:5001/filteredMovies?_limit=12&_page=${page}`);
-    return res.data;
+    const res = await axios.get(
+      `http://localhost:5001/filteredMovies?_limit=12&_page=${page}`
+    );
+    return { data: res.data, totalCount: res.headers["x-total-count"] };
   } catch (error) {
     console.error(error);
   }
