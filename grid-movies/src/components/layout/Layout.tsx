@@ -1,18 +1,12 @@
 import React, { ReactNode, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { keyboardNavigationStore } from "../../store/keyboard-navigation-store";
-import { transformDbMoviesData } from "../../services/getMoviesData";
-import Footer from "./Footer";
 import Header from "./Header";
 import SideBar from "./SideBar";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const { setActiveItem } = keyboardNavigationStore();
-
-  useEffect(() => {
-    (async () => transformDbMoviesData())();
-  }, []);
 
   useEffect(() => {
     setActiveItem(0);

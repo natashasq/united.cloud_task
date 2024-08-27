@@ -2,21 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { keyboardNavigationStore } from "../store/keyboard-navigation-store";
 import { moviesStore } from "../store/movies-store";
-import { BREAKPOINTS } from "../types/types";
-
-const getActiveItemDifference: () => number = () => {
-  let activeItemDifference: number = 1;
-  if (window.innerWidth >= BREAKPOINTS.sm) {
-    activeItemDifference = 2;
-  }
-  if (window.innerWidth >= BREAKPOINTS.lg) {
-    activeItemDifference = 3;
-  }
-  if (window.innerWidth >= BREAKPOINTS.xl) {
-    activeItemDifference = 4;
-  }
-  return activeItemDifference;
-};
+import { getColumnCount } from "../utils/getColumnCount";
 
 const useKeyboardNavigation = (size: number, id: number) => {
   const location = useLocation();
@@ -38,16 +24,16 @@ const useKeyboardNavigation = (size: number, id: number) => {
 
       if (event.key === "ArrowDown") {
         setActiveItem(
-          activeItem < size - getActiveItemDifference()
-            ? activeItem + getActiveItemDifference()
+          activeItem < size - getColumnCount()
+            ? activeItem + getColumnCount()
             : activeItem
         );
       }
 
       if (event.key === "ArrowUp") {
         setActiveItem(
-          activeItem >= getActiveItemDifference()
-            ? activeItem - getActiveItemDifference()
+          activeItem >= getColumnCount()
+            ? activeItem - getColumnCount()
             : activeItem
         );
       }
