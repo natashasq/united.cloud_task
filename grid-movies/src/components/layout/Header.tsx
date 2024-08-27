@@ -6,7 +6,7 @@ import logo from "../../assets/icons/logo.svg";
 
 const Header = () => (
   <div className="w-full h-24 px-10 flex justify-center items-center mb-10 md:justify-start">
-    <Link to={"/home"}>
+    <Link to={"/"}>
       <div className="flex flexi-col gap-0 ml-[-62px]">
         <img src={logo} alt="home icon" className="h-[120px]" />
         <div className="w-20 flex flex-col">
