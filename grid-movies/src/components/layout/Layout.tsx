@@ -25,7 +25,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <SideBar />
         {children}
       </div>
-      <Footer />
     </div>
   );
 };

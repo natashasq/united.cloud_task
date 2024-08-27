@@ -7,6 +7,7 @@ import {
   selectFavoriteMovies,
   selectSelectedMovie,
 } from "../store/movies-store";
+import EmptyState from "../components/empty-state/EmptyState";
 
 const Favorites = () => {
   const favoriteMovies = selectFavoriteMovies();
@@ -16,11 +17,17 @@ const Favorites = () => {
 
   return (
     <Container>
-      <GridWrapper>
-        {favoriteMovies?.map(({ overview, originalTitle, ...item }, index) => (
-          <Card key={item.id} index={index} {...item} />
-        ))}
-      </GridWrapper>
+      {favoriteMovies?.length ? (
+        <GridWrapper>
+          {favoriteMovies?.map(
+            ({ overview, originalTitle, ...item }, index) => (
+              <Card key={item.id} index={index} {...item} />
+            )
+          )}
+        </GridWrapper>
+      ) : (
+        <EmptyState />
+      )}
     </Container>
   );
 };
