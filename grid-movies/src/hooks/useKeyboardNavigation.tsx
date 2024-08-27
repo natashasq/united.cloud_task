@@ -24,7 +24,7 @@ const useKeyboardNavigation = (size: number, id: number) => {
   const { activeItem, setActiveItem } = keyboardNavigationStore();
 
   const handleKeyPress = useCallback(
-    (event: any) => {
+    (event: KeyboardEvent) => {
       event.preventDefault();
       event.stopPropagation();
 

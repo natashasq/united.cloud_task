@@ -1,7 +1,7 @@
 import axios from "axios";
-import { IMovieItem } from "../types/types";
+import { IMovieItem, IMovieReponse } from "../types/types";
 
-export const getAllMovies: () => any = async () => {
+export const getAllMovies: () => Promise<IMovieReponse> = async () => {
   try {
     const res = await axios.get(`http://localhost:5001/movies`);
     return res.data;
@@ -10,8 +10,9 @@ export const getAllMovies: () => any = async () => {
   }
 };
 
-export const postFilteredMovies: (data: IMovieItem[]) => any = async (data) => {
+export const postFilteredMovies: (data: IMovieItem[]) => Promise<IMovieItem[]> = async (data) => {
   try {
+    //@ts-ignore
     const { data } = await getTransformedMovies(1);
     if (!data.length) {
       const res = await axios.post(
@@ -25,7 +26,8 @@ export const postFilteredMovies: (data: IMovieItem[]) => any = async (data) => {
   }
 };
 
-export const getTransformedMovies: (page: number) => any = async (page) => {
+//@ts-ignore
+export const getTransformedMovies: (page: number) => Promise<{data: IMovieItem[], totalCount: string}> = async (page) => {
   try {
     const res = await axios.get(
       `http://localhost:5001/filteredMovies?_limit=12&_page=${page}`
