@@ -1,15 +1,15 @@
 import { IMovieItem, IMovieReponse, IMovieReponseItem } from "../types/types";
 
-const reduceMovies: (apiData: IMovieReponse) => IMovieReponse = (
-  apiData
-) =>
-apiData.reduce(
+const reduceMovies: (apiData: IMovieReponse) => IMovieReponse = (apiData) =>
+  apiData.reduce(
     (acc: IMovieReponseItem[], item: IMovieReponseItem) =>
       acc.find(({ id }) => id === item.id) ? acc : [...acc, item],
     []
   );
 
-export const mapMovies: (apiData: IMovieReponse) => IMovieItem[]= (apiData) => {
+export const mapMovies: (apiData: IMovieReponse) => IMovieItem[] = (
+  apiData
+) => {
   const baseImageUrl = "https://image.tmdb.org/t/p/w500";
 
   return apiData.map(
@@ -21,23 +21,28 @@ export const mapMovies: (apiData: IMovieReponse) => IMovieItem[]= (apiData) => {
       poster_path,
       ratings,
       release_date,
-    }: Partial<IMovieReponseItem>) => ({
-      id: id!,
-      title: title!,
-      originalTitle: original_title!,
-      overview: overview!,
+    }: Omit<
+      IMovieReponseItem,
+      "backdrop_path" | "genre_ids" | "video" | "adult"
+    >) => ({
+      id: id,
+      title: title,
+      originalTitle: original_title,
+      overview: overview,
       poster: poster_path ? `${baseImageUrl}${poster_path}` : "",
       rating: ratings?.filter(
         (ratingItem: { id: string; rating: number }) => ratingItem.id === "imdb"
-      )[0].rating!,
-      releaseDate: release_date!,
-      isFavorite: false!,
-      isSelected: false!,
+      )[0].rating,
+      releaseDate: release_date,
+      isFavorite: false,
+      isSelected: false,
     })
   );
 };
 
-export const sortMovies: (apiData: IMovieItem[]) => IMovieItem[] = (apiData) => {
+export const sortMovies: (apiData: IMovieItem[]) => IMovieItem[] = (
+  apiData
+) => {
   return apiData.sort((item1, item2) => item2.rating - item1.rating);
 };
 
