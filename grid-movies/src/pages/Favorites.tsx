@@ -19,11 +19,9 @@ const Favorites = () => {
     <Container>
       {favoriteMovies?.length ? (
         <GridWrapper>
-          {favoriteMovies?.map(
-            ({ overview, originalTitle, ...item }, index) => (
-              <Card key={item.id} index={index} {...item} />
-            )
-          )}
+             {favoriteMovies?.map(({ id }, index) => (
+            <Card key={id} index={index} id={id}/>
+          ))}
         </GridWrapper>
       ) : (
         <EmptyState />

@@ -32,8 +32,8 @@ const Home = () => {
     return (
       <Container>
         <GridWrapper>
-          {data?.map(({ overview, originalTitle, ...item }, index) => (
-            <Card key={item.id} index={index} {...item} />
+          {data?.map(({ id }, index) => (
+            <Card key={id} index={index} id={id}/>
           ))}
         </GridWrapper>
       </Container>

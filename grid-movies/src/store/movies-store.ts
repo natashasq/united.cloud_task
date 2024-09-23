@@ -72,4 +72,7 @@ export const selectFavoriteMovies = () =>
 export const selectSelectedMovie = () =>
   moviesStore(({ data }) => data?.find((item: IMovieItem) => item.isSelected));
 
+export const selectMovieItem = (id: number) =>
+  moviesStore().data?.find((movie) => movie.id === id);
+
 moviesStore.getState().fetchMovies();
